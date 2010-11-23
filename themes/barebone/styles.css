@@ -1,0 +1,61 @@
+/*	
+	Author Name	: Konstantin Dankov
+	Author Site	: http://dankov.name
+	Skin Name	: Barebone
+	Version		: 0.1
+	Tags		: white, minimalistic
+	Comments	:
+*/
+
+
+/* --- Overlay ------------------------------------ */
+#ib_overlay { background: #FFF;  }
+
+/* --- Image holding box ------------------------------------ */
+#ib_box { background: #FFF; color: #000; font: 12px/160% Georgia, sans-serif; }
+#ib_box * { padding: 0; margin: 0;   }
+#ib_box #ib_image { display: none; width: 100%; height: 100%;   }
+#ib_box #ib_inner { position: relative; }
+
+/* --- Image information panel ------------------------------------ */
+
+#ib_box #ib_info { display: none; padding: 10px; position: absolute; bottom: 0; left: 0; background: #FFF; }
+#ib_box #ib_info h4 { font-size: 18px; font-weight: normal; padding-bottom: 10px; }
+#ib_box #ib_info h4.title {  }
+#ib_box #ib_info p { }
+#ib_box #ib_info #ib_close { display: none; width: 80px; height: 20px; line-height: 20px; cursor: pointer; }
+#ib_box #ib_info #ib_close:hover {  }
+
+/* --- Opacity ------------------------------------ */
+#ib_box #ib_info,
+#ib_overlay { 
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	-moz-opacity: 0.9;
+}
+
+/*#ib_box #ib_info  { 
+	opacity: 0.7;
+	filter: alpha( opacity = 70 );
+	-moz-opacity: 0.7;
+}*/
+
+/* --- Box shadow ------------------------------------ */
+#ib_box {
+	-webkit-box-shadow: 0 0 60px #666;
+	-moz-box-shadow: 0 0 60px #666;
+}
+
+
+/* --- CSS Rounded Corners ------------------------------------ */
+#ib_box #ib_info {
+	-moz-border-radius-topright: 10px;
+	-webkit-border-top-right-radius: 10px;
+}
+
+/*
+#ib_box,
+#ib_image {
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+}*/

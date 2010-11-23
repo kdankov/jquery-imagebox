@@ -1,0 +1,28 @@
+/*	
+	Author Name	: Konstantin Dankov
+	Author Site	: http://dankov.name
+	Skin Name	: ib_Default
+	Version		: 0.1
+	Tags		: white, minimalistic
+	Comments	:
+*/
+
+/* --- Styles for the popup and the overlay ----------------------- */
+#ib_overlay { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; }
+
+#ib_box {  }
+#ib_box * { padding: 0; margin: 0; } /* Reset any styles that may interfier with the elements inside the popup */
+#ib_box { display: none; margin:0; position: fixed; top: 50%; left: 50%; z-index:10000; overflow: hidden; }
+#ib_box #ib_image { display:none; }
+#ib_box #ib_inner { position: relative; height: 100%;  }
+
+#ib_box h4 {  }
+#ib_box h4.title {  }
+#ib_box p { }
+
+#ib_box #ib_info { position: absolute; overflow: hidden; }
+#ib_box #ib_info #ib_close {  }
+
+/* --- Internet explorer specific styles ----------------------- */
+* html #ib_overlay { position: absolute;  }
+* html #ib_box { position: absolute; }
