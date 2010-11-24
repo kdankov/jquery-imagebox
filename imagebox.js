@@ -73,18 +73,17 @@ function ib_init(){
 
 		// Creating the objects that will be called multiple times. Ads readability and improoves performance.
 		var ib_link 				= $(this);
-		var ib_link_offset			= $(this).offset()
+		var ib_link_offset			= $(this).offset();
+		var body_scroll				= $("body").scrollTop();
 		var ib_link_image_width		= $(this).width() - ib_padding*2;
 		var ib_link_image_height	= $(this).height() - ib_padding*2;
 		
-		console.info( ib_link_image_width + ", " + ib_link_image_height );
 
 		// Hide the ImageBox window and its elements
 		ib_box.hide();
 		ib_pic.hide();
 
-		// ib_box.css({ width: ib_link_image_width, height: ib_link_image_height, position: "absolute", top: ib_link_offset.top, left: ib_link_offset.left }); // Return the box to the center of the window to be ready for the next image.
-		ib_box.css({ width: "50px", height: "50px", marginTop: "-25px", marginLeft: "-25px" }); // Return the box to the center of the window to be ready for the next image.
+		ib_box.css({ width: ib_link_image_width, height: ib_link_image_height, position: "absolute", top: ib_link_offset.top, left: ib_link_offset.left }); // Return the box to the center of the window to be ready for the next image.
 		ib_pic.attr({ width: "50px", height: "50px" });
 		
 		// Show the overlay div - Curtains up
@@ -156,10 +155,18 @@ function ib_init(){
 			var boxwidth = pwidth;
 			var boxheight = pheight;
 
+			console.info( body_scroll + ", " + ib_link_offset.top + ", " + ib_link_offset.left );
+			
+			var box_pos_left = (ib_pagesize_width - boxwidth) / 2;
+			var box_pos_top = ((ib_pagesize_height - boxheight) / 2) + body_scroll;
+			
 			if ( ib_debug && support_for_console )
 			{
 				console.info( "Box width: " + boxwidth + "px, Box height: " + boxheight + "px" );
+				console.info( " ----------- Box Position -----------" );
+				console.info( "Top:" + box_pos_top + ", Left: " + box_pos_left );
 			}
+
 			
 			// Calculate the margins needed for positioning the box
 			var margint = boxheight / 2;
@@ -187,18 +194,15 @@ function ib_init(){
 			// Animation start
 			ib_box
 				.show()
-				.animate({ width: boxwidth, marginLeft: -marginl }, ib_animate_time, function (){
+				.animate({ width: boxwidth, height: boxheight, position: "fixed", top: box_pos_top, left: box_pos_left }, ib_animate_time, function (){
 					
-					$(this).animate({ height: boxheight, marginTop: -margint }, ib_animate_time, function (){
-					
-						ib_pic.fadeIn( ib_animate_time );
-					
-						$(this).hover(
-							function(){	ib_info_panel.fadeIn( ib_animate_time );  },
-							function(){	ib_info_panel.fadeOut( ib_animate_time ); }
-						);
-					
-					});
+					ib_pic.fadeIn( ib_animate_time );
+				
+					$(this).hover(
+						function(){	ib_info_panel.fadeIn( ib_animate_time );  },
+						function(){	ib_info_panel.fadeOut( ib_animate_time ); }
+					);
+				
 			});
 			
 		}
