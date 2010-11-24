@@ -2,8 +2,7 @@
  * ImageBox - jQuery Plugin
  * simple and fancy lightbox alternative
  * By Konstantin Dankov (http://dankov.name)
- * Copyright (c) 2009 Janis Skarnelis
- * Examples and documentation at: http://dankov.name/imagebox
+ * Examples and documentation at: https://github.com/kdankov/imagebox
  * 
  * Version: 2.0 Beta 1
  * Requires: jQuery v1.3+
@@ -25,7 +24,7 @@ function ib_init(){
 		var ib_animate_time = 300;
 		
 		// Debug information when things get bad
-		var ib_debug = false; // Show information
+		var ib_debug = true; // Show information
 		
 	// --------------------------------------------------------
 	// Configuration area ends here
@@ -71,10 +70,10 @@ function ib_init(){
 		var ib_numbers = new RegExp("\\d*")
 		var ib_padding = ib_padding_temp.match(ib_numbers);
 
-		// Creating the objects that will be called multiple times. Ads readability and improoves performance.
+		// Creating the objects that will be called multiple times. Ads readability and improves performance.
 		var ib_link 				= $(this);
 		var ib_link_offset			= $(this).offset();
-		var body_scroll				= $("body").scrollTop();
+		var body_scroll				= $.browser.mozilla ? $("html").scrollTop() : $("body").scrollTop(); // For some strange reason the scrolling is handled by the HTML tag in Firefox
 		var ib_link_image_width		= $(this).width() - ib_padding*2;
 		var ib_link_image_height	= $(this).height() - ib_padding*2;
 		
@@ -83,19 +82,17 @@ function ib_init(){
 		ib_box.hide();
 		ib_pic.hide();
 
+		// Sets the dimensions and the position of the imagebox div just on top of the link that is triggering the event.
 		ib_box.css({ width: ib_link_image_width, height: ib_link_image_height, position: "absolute", top: ib_link_offset.top, left: ib_link_offset.left }); // Return the box to the center of the window to be ready for the next image.
-		ib_pic.attr({ width: "50px", height: "50px" });
 		
 		// Show the overlay div - Curtains up
 		ib_overlay.show();
 
 		// Get the closing event attached
-		$( '#ib_overlay, #ib_image, #ib_close' ).click(function(){ 
+		$( '#ib_overlay, #ib_close' ).click(function(){ 
 			ib_box.fadeOut( ib_animate_time, function (){
-				ib_overlay.hide();
-				ib_box.fadeOut( ib_animate_time );
 				ib_info_panel.hide();
-				ib_box.css({ width: "50px", height: "50px", marginTop: "-25px", marginLeft: "-25px" }); // Return the box to the center of the window to be ready for the next image.				
+				ib_overlay.fadeOut( ib_animate_time );
 				ib_pic.attr({ width: "50px", height: "50px" });
 			});
 		});
@@ -118,11 +115,12 @@ function ib_init(){
 			var pwidth2 = 0;
 			var pheight2 = 0;
 			
-			
 			if ( ib_debug && support_for_console )
 			{
-				console.info( "Page width: " + ib_pagesize_width + "px, Page height: " + ib_pagesize_height + "px" );
-				console.info( "Image width: " + pwidth + "px, Image height: " + pheight + "px" );
+				console.info( "----------- Window dimension -----------" );
+				console.info( "Width: " + ib_pagesize_width + "px, Height: " + ib_pagesize_height + "px" );
+				console.info( "----------- Big New Image dimensions -----------" );
+				console.info( "Width: " + pwidth + "px, Height: " + pheight + "px" );
 			}
 
 			// This part makes sure that if the image is bigger than your window it will be resized to fit.
@@ -135,7 +133,8 @@ function ib_init(){
 
 				if ( ib_debug && support_for_console)
 				{
-					console.info( "** Image resized --- New width: " + pwidth + "px, New height: " + pheight + "px" );
+					console.info( "----------- Image resized -----------" );
+					console.info( "--- Width: " + pwidth + "px, Height: " + pheight + "px" );
 				}
 			}
 			else if( pheight + ib_padding * 4 + ib_external_padding > ib_pagesize_height )
@@ -147,7 +146,8 @@ function ib_init(){
 
 				if ( ib_debug && support_for_console )
 				{
-					console.info( "** Image resized --- New width: " + pwidth + "px, New height: " + pheight + "px" );
+					console.info( "----------- Image resized -----------" );
+					console.info( "--- Width: " + pwidth + "px, Height: " + pheight + "px" );
 				}
 			}
 			
@@ -155,15 +155,17 @@ function ib_init(){
 			var boxwidth = pwidth;
 			var boxheight = pheight;
 
-			console.info( body_scroll + ", " + ib_link_offset.top + ", " + ib_link_offset.left );
-			
 			var box_pos_left = (ib_pagesize_width - boxwidth) / 2;
 			var box_pos_top = ((ib_pagesize_height - boxheight) / 2) + body_scroll;
 			
+
 			if ( ib_debug && support_for_console )
 			{
+				console.info( "----------- Box dimentions -----------" );
+				console.info( "Body scrollTop: " + body_scroll + "px, Link offset.top: " + ib_link_offset.top + ", Link offset.left: " + ib_link_offset.left + "px" );
+				console.info( "----------- Box dimentions -----------" );
 				console.info( "Box width: " + boxwidth + "px, Box height: " + boxheight + "px" );
-				console.info( " ----------- Box Position -----------" );
+				console.info( "----------- Box Position -----------" );
 				console.info( "Top:" + box_pos_top + ", Left: " + box_pos_left );
 			}
 
@@ -178,7 +180,7 @@ function ib_init(){
 			
 			if ( ib_debug && support_for_console )
 			{
-				console.info( "Margin top: " + margint + "px, Margin left: " + marginl + "px" );
+				console.info( "----------- Picture text information -----------" );
 				console.info( "Pictire title: " + ib_pic_title );
 				console.info( "Picture description: " + ib_pic_alt );
 				console.info( "************ End of report ************ ");
@@ -202,7 +204,6 @@ function ib_init(){
 						function(){	ib_info_panel.fadeIn( ib_animate_time );  },
 						function(){	ib_info_panel.fadeOut( ib_animate_time ); }
 					);
-				
 			});
 			
 		}
