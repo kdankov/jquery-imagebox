@@ -21,10 +21,11 @@ function ib_init(){
 	
 		var ib_information = true;
 		var ib_external_padding = 100;
+		var ib_internal_padding = 5;
 		var ib_animate_time = 300;
 		
 		// Debug information when things get bad
-		var ib_debug = true; // Show information
+		var ib_debug = false; // Show information
 		
 	// --------------------------------------------------------
 	// Configuration area ends here
@@ -41,8 +42,17 @@ function ib_init(){
 	
 	// Appending html structure to the page
 	$('body').append('<div id="ib_overlay"></div>');
-	$('body').append('<div id="ib_box"><div id="ib_inner"><img id="ib_image" src="" alt="" title="" /><div id="ib_info"><div id="ib_data"><h4></h4><p></p></div><div id="ib_close">X Close</div></div></div></div>');
+	$('body').append('<div id="ib_box"><div id="ib_inner"><img id="ib_image" src="" alt="" title="" /><div id="ib_info"><div id="ib_data"><h4></h4><p></p></div></div><div id="ib_close">X Close</div></div></div>');
 
+	var ib_overlay 				= $('#ib_overlay');
+	var ib_box 					= $('#ib_box');
+	var ib_box_inner 			= ib_box.find('#ib_inner');
+	var ib_pic 					= ib_box.find('#ib_image');
+	var ib_panel_close 			= ib_box.find('#ib_close');
+	var ib_info_panel 			= ib_box.find('#ib_info');
+	var ib_info_panel_data 		= ib_info_panel.find('#ib_data');
+	var ib_info_panel_header 	= ib_box.find('h4');
+	var ib_info_panel_content	= ib_info_panel.find('p');
 	
 	// OnClick event - starts the thing
 	$('.imagebox').click(function(){
@@ -50,18 +60,6 @@ function ib_init(){
 		// --------------------------------------------------------
 		// Do not touch the code below if you don't know what are you doing
 		// --------------------------------------------------------
-
-		// Creating the objects that will be called multiple times. Ads readability and improoves performance.
-		var ib_link 				= $(this);
-		var ib_overlay 				= $('#ib_overlay');
-		var ib_box 					= $('#ib_box');
-		var ib_box_inner 			= ib_box.find('#ib_inner');
-		var ib_pic 					= ib_box.find('#ib_image');
-		var ib_panel_close 			= ib_box.find('#ib_close');
-		var ib_info_panel 			= ib_box.find('#ib_info');
-		var ib_info_panel_data 		= ib_info_panel.find('#ib_data');
-		var ib_info_panel_header 	= ib_box.find('h4');
-		var ib_info_panel_content	= ib_info_panel.find('p');
 		
 		// Get the window size. This is part of the resizing functionality it resizes bigger pictures to fit inside your window.
 		var ib_pagesize = ib_getPageSize();
@@ -73,10 +71,19 @@ function ib_init(){
 		var ib_numbers = new RegExp("\\d*")
 		var ib_padding = ib_padding_temp.match(ib_numbers);
 
+		// Creating the objects that will be called multiple times. Ads readability and improoves performance.
+		var ib_link 				= $(this);
+		var ib_link_offset			= $(this).offset()
+		var ib_link_image_width		= $(this).width() - ib_padding*2;
+		var ib_link_image_height	= $(this).height() - ib_padding*2;
+		
+		console.info( ib_link_image_width + ", " + ib_link_image_height );
+
 		// Hide the ImageBox window and its elements
 		ib_box.hide();
 		ib_pic.hide();
 
+		// ib_box.css({ width: ib_link_image_width, height: ib_link_image_height, position: "absolute", top: ib_link_offset.top, left: ib_link_offset.left }); // Return the box to the center of the window to be ready for the next image.
 		ib_box.css({ width: "50px", height: "50px", marginTop: "-25px", marginLeft: "-25px" }); // Return the box to the center of the window to be ready for the next image.
 		ib_pic.attr({ width: "50px", height: "50px" });
 		
@@ -89,7 +96,7 @@ function ib_init(){
 				ib_overlay.hide();
 				ib_box.fadeOut( ib_animate_time );
 				ib_info_panel.hide();
-				ib_box.css({ width: "50px", height: "50px", marginTop: "-25px", marginLeft: "-25px" }); // Return the box to the center of the window to be ready for the next image.
+				ib_box.css({ width: "50px", height: "50px", marginTop: "-25px", marginLeft: "-25px" }); // Return the box to the center of the window to be ready for the next image.				
 				ib_pic.attr({ width: "50px", height: "50px" });
 			});
 		});
@@ -145,7 +152,7 @@ function ib_init(){
 				}
 			}
 			
-			// Calculate the box size - Its a sum of the image width and padding set in the config section.
+			// Calculate the box size
 			var boxwidth = pwidth;
 			var boxheight = pheight;
 
@@ -170,21 +177,28 @@ function ib_init(){
 				console.info( "************ End of report ************ ");
 			}
 			
-			ib_pic
-				.css({ display: "block" })
-				.attr({ width: pwidth, height: pheight, src: ib_preload_image.src })
-				.css({ marginTop: ib_padding, marginLeft: ib_padding });
+			// Set image to the right size
+			ib_pic.attr({ width: pwidth, height: pheight, src: ib_preload_image.src });
 
 			// Populate Title and Description
 			ib_info_panel_header.text( ib_pic_title );
 			ib_info_panel_content.html( ib_pic_alt );
 
 			// Animation start
-			ib_box.show().animate({ width: boxwidth, height: boxheight, marginTop: -margint, marginLeft:  -marginl }, ib_animate_time, function (){
-				ib_box.hover(
-					function(){	ib_info_panel.fadeIn( ib_animate_time );  },
-					function(){	ib_info_panel.fadeOut( ib_animate_time ); }
-				);
+			ib_box
+				.show()
+				.animate({ width: boxwidth, marginLeft: -marginl }, ib_animate_time, function (){
+					
+					$(this).animate({ height: boxheight, marginTop: -margint }, ib_animate_time, function (){
+					
+						ib_pic.fadeIn( ib_animate_time );
+					
+						$(this).hover(
+							function(){	ib_info_panel.fadeIn( ib_animate_time );  },
+							function(){	ib_info_panel.fadeOut( ib_animate_time ); }
+						);
+					
+					});
 			});
 			
 		}
