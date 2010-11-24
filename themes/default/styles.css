@@ -19,8 +19,10 @@
 #ib_box p { }
 
 #ib_box #ib_info { display: none; bottom: 0; left: 0; background: rgba(255, 255, 255, 0.5); padding: 10px; }
-#ib_box #ib_close { width: 20px; height: 20px; position: absolute; top: -20px; left: -20px; text-indent: -1920px; background: url(close.png) center no-repeat; }
+#ib_box #ib_close { width: 20px; height: 20px; position: absolute; top: -18px; left: -18px; text-indent: -1920px; background: url(close.png) center no-repeat; }
 
-/* --- Internet explorer specific styles ----------------------- */
-* html #ib_overlay { position: absolute;  }
-* html #ib_box { position: absolute; }
+#ib_box, #ib_image {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}

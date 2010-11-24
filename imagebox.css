@@ -20,7 +20,8 @@
 #ib_box p { }
 
 #ib_box #ib_info { position: absolute; overflow: hidden; }
-#ib_box #ib_info #ib_close {  }
+
+#ib_box #ib_close { cursor: pointer; }
 
 /* --- Internet explorer specific styles ----------------------- */
 * html #ib_overlay { position: absolute;  }
